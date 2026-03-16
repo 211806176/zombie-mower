@@ -1,9 +1,6 @@
 extends CharacterBody2D
 class_name Player
 
-## 玩家角色控制器
-## 核心功能：移动、攻击、武器切换
-
 signal health_changed(current: int, max: int)
 signal died
 
@@ -20,31 +17,25 @@ var facing_direction: Vector2 = Vector2.RIGHT
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var weapon_holder: Node2D = $WeaponHolder
 @onready var hitbox_area: Area2D = $HitboxArea
+@onready var shotgun_scene = preload("res://scenes/weapons/shotgun.tscn")
 
 func _ready() -> void:
 	current_health = max_health
 	health_changed.emit(current_health, max_health)
-	
-	# 默认添加一把武器
-	add_weapon(PreloadedResources.shotgun.instantiate())
+	add_weapon(shotgun_scene.instantiate())
 
 func _physics_process(_delta: float) -> void:
-	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	
-	# 移动
+	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = direction * speed
 	move_and_slide()
 	
-	# 朝向
 	if direction.x != 0:
 		facing_direction = Vector2.RIGHT if direction.x > 0 else Vector2.LEFT
 		scale.x = facing_direction.x
 	
-	# 攻击输入
 	if Input.is_action_just_pressed("attack"):
 		attack()
 	
-	# 武器切换
 	if Input.is_action_just_pressed("weapon_1"):
 		switch_weapon(0)
 	elif Input.is_action_just_pressed("weapon_2"):
@@ -58,8 +49,6 @@ func attack() -> void:
 	
 	is_attacking = true
 	weapons[current_weapon_index].attack(facing_direction)
-	
-	# 攻击动画完成后重置
 	await get_tree().create_timer(0.3).timeout
 	is_attacking = false
 
@@ -68,7 +57,6 @@ func switch_weapon(index: int) -> void:
 		return
 	
 	current_weapon_index = index
-	# 更新武器显示
 	for i in range(weapon_holder.get_child_count()):
 		weapon_holder.get_child(i).visible = (i == current_weapon_index)
 
@@ -86,7 +74,6 @@ func take_damage(amount: int) -> void:
 	current_health = max(0, current_health - amount)
 	health_changed.emit(current_health, max_health)
 	
-	# 受伤特效
 	modulate = Color.RED
 	await get_tree().create_timer(0.1).timeout
 	modulate = Color.WHITE

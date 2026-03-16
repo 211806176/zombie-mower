@@ -1,8 +1,5 @@
-extends CharacterBody2D
+extends Node2D
 class_name Zombie
-
-## 僵尸AI
-## 追踪玩家并造成伤害
 
 signal died(points: int)
 
@@ -11,7 +8,7 @@ signal died(points: int)
 @export var damage: int = 10
 @export var attack_cooldown: float = 1.0
 @export var points_on_death: int = 10
-@export var zombie_type: String = "normal"  # normal, fast, tank, boss
+@export var zombie_type: String = "normal"
 
 var player: Node2D
 var last_attack_time: float = 0.0
@@ -21,11 +18,10 @@ var is_dead: bool = false
 @onready var hitbox_area: Area2D = $HitboxArea
 
 func _ready() -> void:
-	# 查找玩家
 	await get_tree().create_timer(0.1).timeout
 	player = get_tree().get_first_node_in_group("player")
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if is_dead or not player:
 		return
 	
@@ -33,11 +29,9 @@ func _physics_process(delta: float) -> void:
 	velocity = direction * speed
 	move_and_slide()
 	
-	# 朝向玩家
 	if direction.x != 0:
-		scale.x = -1 if direction.x < 0 else 1
+		scale.x = -1.0 if direction.x < 0.0 else 1.0
 	
-	# 检测与玩家碰撞
 	check_player_collision()
 
 func check_player_collision() -> void:
@@ -58,7 +52,6 @@ func take_damage(amount: int) -> void:
 	
 	health -= amount
 	
-	# 受伤闪烁
 	modulate = Color.RED
 	await get_tree().create_timer(0.05).timeout
 	modulate = Color.WHITE
@@ -73,7 +66,6 @@ func die() -> void:
 	is_dead = true
 	died.emit(points_on_death)
 	
-	# 死亡动画
 	modulate = Color(0.5, 0.5, 0.5, 0.8)
 	var tween = create_tween()
 	tween.tween_property(self, "modulate:a", 0.0, 0.3)
@@ -97,4 +89,4 @@ func set_zombie_type(type: String) -> void:
 			health = 500
 			damage = 30
 			points_on_death = 200
-			scale = Vector2(2, 2)
+			scale = Vector2(2.0, 2.0)
