@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=3 format=3 uid="uid://main_scene"]
 
 [ext_resource type="Script" path="res://scripts/main_game_scene.gd" id="1_main"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_player"]
+radius = 20.0
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
@@ -12,11 +15,14 @@ position = Vector2(640, 360)
 modulate = Color(0.3, 0.69, 0.31, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-shape = SubResource("CircleShape2D_1")
+shape = SubResource("CircleShape2D_player")
 
 [node name="WeaponHolder" type="Node2D" parent="Player"]
 
 [node name="HitboxArea" type="Area2D" parent="Player"]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Player/HitboxArea"]
+shape = SubResource("CircleShape2D_player")
 
 [node name="GameManager" type="Node" parent="."]
 
@@ -26,14 +32,14 @@ shape = SubResource("CircleShape2D_1")
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 200.0
-offset_bottom = 60.0
+offset_bottom = 46.0
 text = "分数: 0"
 
 [node name="WaveLabel" type="Label" parent="UI"]
 offset_left = 20.0
 offset_top = 50.0
 offset_right = 200.0
-offset_bottom = 90.0
+offset_bottom = 76.0
 text = "波次: 1"
 
 [node name="HealthBar" type="ProgressBar" parent="UI"]
@@ -45,10 +51,15 @@ value = 100.0
 
 [node name="UpgradePanel" type="Panel" parent="UI"]
 visible = false
-offset_left = 340.0
-offset_top = 200.0
-offset_right = 940.0
-offset_bottom = 520.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = 160.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/UpgradePanel"]
 offset_left = 20.0
@@ -75,10 +86,15 @@ text = "选项3"
 
 [node name="GameOverPanel" type="Panel" parent="UI"]
 visible = false
-offset_left = 340.0
-offset_top = 200.0
-offset_right = 940.0
-offset_bottom = 520.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -160.0
+offset_right = 300.0
+offset_bottom = 160.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/GameOverPanel"]
 offset_left = 20.0
