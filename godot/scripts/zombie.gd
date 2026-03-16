@@ -5,12 +5,12 @@ extends CharacterBody2D
 class_name Zombie
 
 # 信号
-signal died(points: int)  # 死亡时发出，包含击杀得分
+signal died(points: int)  # 死亡时发出,包含击杀得分
 
 # 属性
 var speed: float = 80.0           # 移动速度
 var health: int = 30              # 生命值
-var damage: int = 10               # 攻击力
+var damage: int = 10              # 攻击力
 var attack_cooldown: float = 1.0   # 攻击间隔
 var points_on_death: int = 10      # 死亡得分
 var zombie_type: String = "normal" # 僵尸类型
@@ -22,7 +22,7 @@ var is_dead: bool = false          # 是否已死亡
 
 func _ready() -> void:
 	# 延迟获取玩家引用
-	await get_tree().create_timer(0.1).timeout
+	get_tree().create_timer(0.1)
 	player = get_tree().get_first_node_in_group("player")
 
 func _physics_process(_delta: float) -> void:
@@ -64,7 +64,7 @@ func take_damage(amount: int) -> void:
 	health -= amount
 	# 受伤闪烁
 	modulate = Color.RED
-	await get_tree().create_timer(0.05).timeout
+	get_tree().create_timer(0.05)
 	modulate = Color.WHITE
 	
 	if health <= 0:

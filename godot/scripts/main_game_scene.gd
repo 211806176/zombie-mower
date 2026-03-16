@@ -42,11 +42,12 @@ func _ready() -> void:
 	game_manager.level_completed.connect(_on_level_completed)
 	game_manager.game_over.connect(_on_game_over)
 	
-	# 连接玩家信号
-	if player and player.has_signal("health_changed"):
-		player.health_changed.connect(_on_health_changed)
-	if player and player.has_signal("died"):
-		player.died.connect(_on_player_died)
+	# 连接玩家信号 - 使用get方法避免类型错误
+	var player_node = get_tree().get_first_node_in_group("player")
+	if player_node and player_node.has_signal("health_changed"):
+		player_node.health_changed.connect(_on_health_changed)
+	if player_node and player_node.has_signal("died"):
+		player_node.died.connect(_on_player_died)
 	
 	# 隐藏面板
 	if upgrade_panel:
