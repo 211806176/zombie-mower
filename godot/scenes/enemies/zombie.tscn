@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://zombie_scene"]
+
+[ext_resource type="Script" path="res://scripts/zombie.gd" id="1_zombie"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_zombie"]
+radius = 20.0
+
+[node name="Zombie" type="CharacterBody2D"]
+script = ExtResource("1_zombie")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.4, 0.6, 0.4, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_zombie")
+
+[node name="HitboxArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxArea"]
+shape = SubResource("CircleShape2D_zombie")
