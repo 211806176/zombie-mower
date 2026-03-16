@@ -33,14 +33,14 @@ offset_left = 20.0
 offset_top = 20.0
 offset_right = 200.0
 offset_bottom = 46.0
-text = "分数: 0"
+text = "Score: 0"
 
 [node name="WaveLabel" type="Label" parent="UI"]
 offset_left = 20.0
 offset_top = 50.0
 offset_right = 200.0
 offset_bottom = 76.0
-text = "波次: 1"
+text = "Wave: 1"
 
 [node name="HealthBar" type="ProgressBar" parent="UI"]
 offset_left = 20.0
@@ -70,19 +70,19 @@ offset_bottom = 300.0
 [node name="Option1" type="Button" parent="UI/UpgradePanel/VBoxContainer"]
 offset_right = 560.0
 offset_bottom = 80.0
-text = "选项1"
+text = "Option 1"
 
 [node name="Option2" type="Button" parent="UI/UpgradePanel/VBoxContainer"]
 offset_top = 84.0
 offset_right = 560.0
 offset_bottom = 164.0
-text = "选项2"
+text = "Option 2"
 
 [node name="Option3" type="Button" parent="UI/UpgradePanel/VBoxContainer"]
 offset_top = 168.0
 offset_right = 560.0
 offset_bottom = 248.0
-text = "选项3"
+text = "Option 3"
 
 [node name="GameOverPanel" type="Panel" parent="UI"]
 visible = false
@@ -105,16 +105,16 @@ offset_bottom = 300.0
 [node name="Label" type="Label" parent="UI/GameOverPanel/VBoxContainer"]
 offset_right = 560.0
 offset_bottom = 40.0
-text = "游戏结束"
+text = "Game Over"
 
 [node name="FinalScoreLabel" type="Label" parent="UI/GameOverPanel/VBoxContainer"]
 offset_top = 44.0
 offset_right = 560.0
 offset_bottom = 84.0
-text = "最终分数: 0"
+text = "最终Score: 0"
 
 [node name="RestartButton" type="Button" parent="UI/GameOverPanel/VBoxContainer"]
 offset_top = 88.0
 offset_right = 560.0
 offset_bottom = 148.0
-text = "重新开始"
+text = "Restart"
