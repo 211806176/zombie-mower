@@ -11,8 +11,12 @@ script = ExtResource("1_main")
 [node name="Player" type="CharacterBody2D" parent="." groups=["player"]]
 position = Vector2(640, 360)
 
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
-modulate = Color(0.3, 0.69, 0.31, 1)
+[node name="Sprite2D" type="ColorRect" parent="Player"]
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+color = Color(0.2, 0.8, 0.2, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("CircleShape2D_player")
@@ -23,8 +27,6 @@ shape = SubResource("CircleShape2D_player")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="Player/HitboxArea"]
 shape = SubResource("CircleShape2D_player")
-
-[node name="GameManager" type="Node" parent="."]
 
 [node name="UI" type="CanvasLayer" parent="."]
 
@@ -111,7 +113,7 @@ text = "Game Over"
 offset_top = 44.0
 offset_right = 560.0
 offset_bottom = 84.0
-text = "最终Score: 0"
+text = "Final Score: 0"
 
 [node name="RestartButton" type="Button" parent="UI/GameOverPanel/VBoxContainer"]
 offset_top = 88.0
