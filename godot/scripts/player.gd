@@ -31,51 +31,39 @@ func _ready() -> void:
 	health_changed.emit(current_health, max_health)
 	# 默认装备霰弹枪
 	add_weapon(shotgun_scene.instantiate())
-	print("Player ready, speed: ", speed)
 
 func _physics_process(_delta: float) -> void:
-	# 获取输入方向
-	var input_l = Input.is_action_pressed("move_left")
-	var input_r = Input.is_action_pressed("move_right")
-	var input_u = Input.is_action_pressed("move_up")
-	var input_d = Input.is_action_pressed("move_down")
-	
+	# 直接检测按键
 	var direction = Vector2.ZERO
-	if input_l:
-		direction.x -= 1
-	if input_r:
-		direction.x += 1
-	if input_u:
-		direction.y -= 1
-	if input_d:
-		direction.y += 1
 	
-	# 归一化方向向量
+	# 检测方向键
+	if Input.is_key_pressed(KEY_LEFT) or Input.is_key_pressed(KEY_A):
+		direction.x = -1
+	if Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_D):
+		direction.x = 1
+	if Input.is_key_pressed(KEY_UP) or Input.is_key_pressed(KEY_W):
+		direction.y = -1
+	if Input.is_key_pressed(KEY_DOWN) or Input.is_key_pressed(KEY_S):
+		direction.y = 1
+	
+	# 归一化
 	if direction.length() > 0:
 		direction = direction.normalized()
 	
-	# 应用速度
+	# 设置速度
 	velocity = direction * speed
 	
-	# 调用move_and_slide()进行移动
+	# 移动
 	move_and_slide()
 	
-	# 更新朝向
+	# 朝向
 	if direction.x != 0:
 		facing_direction = Vector2.RIGHT if direction.x > 0 else Vector2.LEFT
 		scale.x = facing_direction.x
 	
-	# 攻击输入
-	if Input.is_action_just_pressed("attack"):
+	# 攻击
+	if Input.is_key_pressed(KEY_SPACE):
 		attack()
-	
-	# 武器切换输入
-	if Input.is_action_just_pressed("weapon_1"):
-		switch_weapon(0)
-	elif Input.is_action_just_pressed("weapon_2"):
-		switch_weapon(1)
-	elif Input.is_action_just_pressed("weapon_3"):
-		switch_weapon(2)
 
 # 攻击
 func attack() -> void:
@@ -83,7 +71,6 @@ func attack() -> void:
 		return
 	
 	is_attacking = true
-	# 调用当前武器攻击
 	weapons[current_weapon_index].attack(facing_direction)
 	get_tree().create_timer(0.3)
 	is_attacking = false
@@ -92,9 +79,7 @@ func attack() -> void:
 func switch_weapon(index: int) -> void:
 	if index >= weapons.size() or index == current_weapon_index:
 		return
-	
 	current_weapon_index = index
-	# 更新武器显示状态
 	for i in range(weapon_holder.get_child_count()):
 		weapon_holder.get_child(i).visible = (i == current_weapon_index)
 
@@ -102,11 +87,8 @@ func switch_weapon(index: int) -> void:
 func add_weapon(weapon) -> void:
 	if weapons.size() >= max_weapons:
 		return
-	
 	weapons.append(weapon)
 	weapon_holder.add_child(weapon)
-	
-	# 第一把武器自动装备
 	if weapons.size() == 1:
 		switch_weapon(0)
 
@@ -114,12 +96,9 @@ func add_weapon(weapon) -> void:
 func take_damage(amount: int) -> void:
 	current_health = max(0, current_health - amount)
 	health_changed.emit(current_health, max_health)
-	
-	# 受伤闪烁效果
 	modulate = Color.RED
 	get_tree().create_timer(0.1)
 	modulate = Color.WHITE
-	
 	if current_health <= 0:
 		died.emit()
 		queue_free()
