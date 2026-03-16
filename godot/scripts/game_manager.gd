@@ -1,9 +1,8 @@
 extends Node
-class_name GameManager
 
-signal score_changed(new_score: int)
-signal wave_started(wave_num: int)
-signal level_completed(level: int)
+signal score_changed
+signal wave_started
+signal level_completed
 signal game_over
 
 var current_level: int = 1
@@ -18,13 +17,13 @@ var spawn_interval: float = 1.5
 var is_game_running: bool = false
 var zombies_to_spawn: int = 0
 var spawn_timer: float = 0.0
-var player: Player = null
-var zombie_scene: PackedScene
+var player = null
+var zombie_scene
 
 func _ready() -> void:
 	zombie_scene = load("res://scenes/enemies/zombie.tscn")
 	player = get_tree().get_first_node_in_group("player")
-	if player:
+	if player and player.has_signal("died"):
 		player.died.connect(_on_player_died)
 
 func start_game() -> void:
@@ -71,7 +70,7 @@ func spawn_zombie() -> void:
 	zombies_to_spawn -= 1
 
 func get_spawn_position() -> Vector2:
-	var viewport = get_viewport_rect()
+	var viewport = get_viewport().get_visible_rect()
 	var side = randi() % 4
 	var pos = Vector2.ZERO
 	match side:
