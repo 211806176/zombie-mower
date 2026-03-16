@@ -72,7 +72,7 @@ func spawn_zombie() -> void:
 	else:
 		zombie.set_zombie_type("normal")
 	
-	var hp_scale = pow(zombie_hp_multiplier, current_wave - 1)
+	var hp_scale = pow(zombie_hp_multiplier, float(current_wave - 1))
 	zombie.health = int(zombie.health * hp_scale)
 	zombie.global_position = get_spawn_position()
 	zombie.died.connect(_on_zombie_died)
@@ -102,8 +102,10 @@ func _on_zombie_died(points: int) -> void:
 	score_changed.emit(score)
 	zombies_killed_in_wave += 1
 	
-	if zombies_to_spawn <= 0 and get_tree().get_nodes_in_group("zombies").size() == 0:
-		on_wave_completed()
+	if zombies_to_spawn <= 0:
+		var zombies = get_tree().get_nodes_in_group("zombies")
+		if zombies.size() == 0:
+			on_wave_completed()
 
 func on_wave_completed() -> void:
 	if current_wave % waves_per_level == 0:

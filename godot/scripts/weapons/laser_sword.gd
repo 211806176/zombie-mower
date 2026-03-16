@@ -15,11 +15,8 @@ func _ready() -> void:
 func attack(direction: Vector2) -> void:
 	if not can_fire:
 		return
-	
 	can_fire = false
-	
 	await perform_swing(direction)
-	
 	await get_tree().create_timer(attack_speed - swing_duration).timeout
 	can_fire = true
 
@@ -40,7 +37,6 @@ func perform_swing(direction: Vector2) -> void:
 		attack_area.global_position = global_position
 	
 	get_tree().current_scene.add_child(attack_area)
-	
 	await get_tree().create_timer(0.05).timeout
 	
 	var bodies = attack_area.get_overlapping_bodies()
@@ -49,23 +45,3 @@ func perform_swing(direction: Vector2) -> void:
 			body.take_damage(damage)
 	
 	attack_area.queue_free()
-	create_sword_trail(direction)
-
-func create_sword_trail(direction: Vector2) -> void:
-	var trail = Line2D.new()
-	trail.width = 20.0
-	trail.default_color = Color(0.0, 0.8, 1.0, 0.8)
-	trail.joint_mode = Line2D.JOINT_ROUND
-	trail.begin_cap_mode = Line2D.LINE_CAP_ROUND
-	trail.end_cap_mode = Line2D.LINE_CAP_ROUND
-	
-	var points_count = 10
-	for i in range(points_count):
-		trail.add_point(direction * (weapon_range * float(i) / float(points_count)))
-	
-	trail.global_position = global_position
-	get_tree().current_scene.add_child(trail)
-	
-	var tween = create_tween()
-	tween.tween_property(trail, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(trail.queue_free)
