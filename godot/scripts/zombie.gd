@@ -3,39 +3,35 @@ class_name Zombie
 
 signal died(points: int)
 
-@export var speed: float = 80.0
-@export var health: int = 30
-@export var damage: int = 10
-@export var attack_cooldown: float = 1.0
-@export var points_on_death: int = 10
-@export var zombie_type: String = "normal"
+var speed: float = 80.0
+var health: int = 30
+var damage: int = 10
+var attack_cooldown: float = 1.0
+var points_on_death: int = 10
+var zombie_type: String = "normal"
 
 var player: Node2D = null
 var last_attack_time: float = 0.0
 var is_dead: bool = false
 
 func _ready() -> void:
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.1)
 	player = get_tree().get_first_node_in_group("player")
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if is_dead or player == null:
 		return
-	
 	var direction = (player.global_position - global_position).normalized()
 	velocity = direction * speed
 	move_and_slide()
-	
 	if direction.x != 0.0:
 		scale.x = -1.0 if direction.x < 0.0 else 1.0
-	
 	check_player_collision()
 
 func check_player_collision() -> void:
 	var now = Time.get_ticks_msec() / 1000.0
 	if now - last_attack_time < attack_cooldown:
 		return
-	
 	var hitbox = get_node_or_null("HitboxArea")
 	if hitbox and hitbox.has_overlapping_bodies():
 		var bodies = hitbox.get_overlapping_bodies()
@@ -47,19 +43,16 @@ func check_player_collision() -> void:
 func take_damage(amount: int) -> void:
 	if is_dead:
 		return
-	
 	health -= amount
 	modulate = Color.RED
-	await get_tree().create_timer(0.05).timeout
+	await get_tree().create_timer(0.05)
 	modulate = Color.WHITE
-	
 	if health <= 0:
 		die()
 
 func die() -> void:
 	if is_dead:
 		return
-	
 	is_dead = true
 	died.emit(points_on_death)
 	modulate = Color(0.5, 0.5, 0.5, 0.8)
