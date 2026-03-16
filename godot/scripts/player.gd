@@ -21,7 +21,6 @@ var is_attacking: bool = false        # 是否正在攻击
 var facing_direction: Vector2 = Vector2.RIGHT  # 朝向
 
 # 节点引用
-@onready var sprite: Sprite2D = $Sprite2D
 @onready var weapon_holder: Node2D = $WeaponHolder
 @onready var hitbox_area: Area2D = $HitboxArea
 @onready var shotgun_scene = preload("res://scenes/weapons/shotgun.tscn")
@@ -32,13 +31,33 @@ func _ready() -> void:
 	health_changed.emit(current_health, max_health)
 	# 默认装备霰弹枪
 	add_weapon(shotgun_scene.instantiate())
+	print("Player ready, speed: ", speed)
 
 func _physics_process(_delta: float) -> void:
 	# 获取输入方向
-	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	var input_l = Input.is_action_pressed("move_left")
+	var input_r = Input.is_action_pressed("move_right")
+	var input_u = Input.is_action_pressed("move_up")
+	var input_d = Input.is_action_pressed("move_down")
+	
+	var direction = Vector2.ZERO
+	if input_l:
+		direction.x -= 1
+	if input_r:
+		direction.x += 1
+	if input_u:
+		direction.y -= 1
+	if input_d:
+		direction.y += 1
+	
+	# 归一化方向向量
+	if direction.length() > 0:
+		direction = direction.normalized()
 	
 	# 应用速度
 	velocity = direction * speed
+	
+	# 调用move_and_slide()进行移动
 	move_and_slide()
 	
 	# 更新朝向
@@ -66,7 +85,7 @@ func attack() -> void:
 	is_attacking = true
 	# 调用当前武器攻击
 	weapons[current_weapon_index].attack(facing_direction)
-	await get_tree().create_timer(0.3).timeout
+	get_tree().create_timer(0.3)
 	is_attacking = false
 
 # 切换武器
@@ -98,7 +117,7 @@ func take_damage(amount: int) -> void:
 	
 	# 受伤闪烁效果
 	modulate = Color.RED
-	await get_tree().create_timer(0.1).timeout
+	get_tree().create_timer(0.1)
 	modulate = Color.WHITE
 	
 	if current_health <= 0:
