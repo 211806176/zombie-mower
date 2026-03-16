@@ -1,9 +1,9 @@
 extends Node2D
 
 var current_upgrades = []
-var game_manager: GameManager = null
-var upgrade_manager: UpgradeManager = null
-var player: Player = null
+var game_manager = null
+var upgrade_manager = null
+var player = null
 
 @onready var score_label = null
 @onready var wave_label = null
@@ -25,8 +25,9 @@ func _ready() -> void:
 	game_manager.wave_started.connect(_on_wave_started)
 	game_manager.level_completed.connect(_on_level_completed)
 	game_manager.game_over.connect(_on_game_over)
-	if player:
+	if player and player.has_signal("health_changed"):
 		player.health_changed.connect(_on_health_changed)
+	if player and player.has_signal("died"):
 		player.died.connect(_on_player_died)
 	if upgrade_panel:
 		upgrade_panel.visible = false
@@ -90,12 +91,3 @@ func show_upgrade_panel() -> void:
 		if option3 and options.size() > 2:
 			option3.text = options[2].description
 			option3.disabled = false
-
-func select_upgrade(upgrade) -> void:
-	current_upgrades.append(upgrade)
-	if upgrade_panel:
-		upgrade_panel.visible = false
-	if upgrade_manager and player:
-		upgrade_manager.apply_upgrade(upgrade, player)
-	if game_manager:
-		game_manager.start_next_wave()
