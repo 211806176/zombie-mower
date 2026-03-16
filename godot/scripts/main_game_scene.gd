@@ -5,20 +5,22 @@ var game_manager = null
 var upgrade_manager = null
 var player = null
 
-@onready var score_label = null
-@onready var wave_label = null
-@onready var health_bar = null
-@onready var upgrade_panel = null
-@onready var game_over_panel = null
-@onready var final_score_label = null
+var score_label = null
+var wave_label = null
+var health_bar = null
+var upgrade_panel = null
+var game_over_panel = null
+var final_score_label = null
 
 func _ready() -> void:
 	setup_ui_references()
 	player = get_tree().get_first_node_in_group("player")
-	game_manager = GameManager.new()
+	game_manager = ClassDB.instantiate("Node")
+	game_manager.set_script(load("res://scripts/game_manager.gd"))
 	game_manager.name = "GameManager"
 	add_child(game_manager)
-	upgrade_manager = UpgradeManager.new()
+	upgrade_manager = ClassDB.instantiate("Node")
+	upgrade_manager.set_script(load("res://scripts/upgrade_manager.gd"))
 	upgrade_manager.name = "UpgradeManager"
 	add_child(upgrade_manager)
 	game_manager.score_changed.connect(_on_score_changed)
