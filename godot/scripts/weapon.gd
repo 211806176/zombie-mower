@@ -58,7 +58,7 @@ func fire_projectile(direction: Vector2) -> void:
 		if projectile:
 			projectile.setup(final_direction * projectile_speed, damage, penetration, weapon_range)
 			projectile.global_position = global_position
-			get_tree().current_scene.add_child(projectile)
+			get_tree().root.add_child(projectile)
 			fired.emit(global_position, final_direction, damage)
 
 # 创建投射物(子类重写)
